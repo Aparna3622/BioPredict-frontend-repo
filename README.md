@@ -1,115 +1,73 @@
-# flatted
+# Welcome to your Lovable project
 
-[![Downloads](https://img.shields.io/npm/dm/flatted.svg)](https://www.npmjs.com/package/flatted) [![Coverage Status](https://coveralls.io/repos/github/WebReflection/flatted/badge.svg?branch=main)](https://coveralls.io/github/WebReflection/flatted?branch=main) [![Build Status](https://travis-ci.com/WebReflection/flatted.svg?branch=main)](https://travis-ci.com/WebReflection/flatted) [![License: ISC](https://img.shields.io/badge/License-ISC-yellow.svg)](https://opensource.org/licenses/ISC) ![WebReflection status](https://offline.report/status/webreflection.svg)
+## Project info
 
-![snow flake](./flatted.jpg)
+**URL**: https://lovable.dev/projects/2ac01914-2f27-46e4-9032-257f34e8d060
 
-<sup>**Social Media Photo by [Matt Seymour](https://unsplash.com/@mattseymour) on [Unsplash](https://unsplash.com/)**</sup>
+## How can I edit this code?
 
-A super light (0.5K) and fast circular JSON parser, directly from the creator of [CircularJSON](https://github.com/WebReflection/circular-json/#circularjson).
+There are several ways of editing your application.
 
-Available also for **[PHP](./php/flatted.php)**.
+**Use Lovable**
 
-Available also for **[Python](./python/flatted.py)**.
+Simply visit the [Lovable Project](https://lovable.dev/projects/2ac01914-2f27-46e4-9032-257f34e8d060) and start prompting.
 
-- - -
+Changes made via Lovable will be committed automatically to this repo.
 
-## Announcement 📣
+**Use your preferred IDE**
 
-There is a standard approach to recursion and more data-types than what JSON allows, and it's part of the [Structured Clone polyfill](https://github.com/ungap/structured-clone/#readme).
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-Beside acting as a polyfill, its `@ungap/structured-clone/json` export provides both `stringify` and `parse`, and it's been tested for being faster than *flatted*, but its produced output is also smaller than *flatted* in general.
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-The *@ungap/structured-clone* module is, in short, a drop in replacement for *flatted*, but it's not compatible with *flatted* specialized syntax.
+Follow these steps:
 
-However, if recursion, as well as more data-types, are what you are after, or interesting for your projects/use cases, consider switching to this new module whenever you can 👍
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-- - -
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-```js
-npm i flatted
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
 ```
 
-Usable via [CDN](https://unpkg.com/flatted) or as regular module.
+**Edit a file directly in GitHub**
 
-```js
-// ESM
-import {parse, stringify, toJSON, fromJSON} from 'flatted';
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-// CJS
-const {parse, stringify, toJSON, fromJSON} = require('flatted');
+**Use GitHub Codespaces**
 
-const a = [{}];
-a[0].a = a;
-a.push(a);
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-stringify(a); // [["1","0"],{"a":"0"}]
-```
+## What technologies are used for this project?
 
-## toJSON and fromJSON
+This project is built with:
 
-If you'd like to implicitly survive JSON serialization, these two helpers helps:
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-```js
-import {toJSON, fromJSON} from 'flatted';
+## How can I deploy this project?
 
-class RecursiveMap extends Map {
-  static fromJSON(any) {
-    return new this(fromJSON(any));
-  }
-  toJSON() {
-    return toJSON([...this.entries()]);
-  }
-}
+Simply open [Lovable](https://lovable.dev/projects/2ac01914-2f27-46e4-9032-257f34e8d060) and click on Share -> Publish.
 
-const recursive = new RecursiveMap;
-const same = {};
-same.same = same;
-recursive.set('same', same);
+## Can I connect a custom domain to my Lovable project?
 
-const asString = JSON.stringify(recursive);
-const asMap = RecursiveMap.fromJSON(JSON.parse(asString));
-asMap.get('same') === asMap.get('same').same;
-// true
-```
+Yes, you can!
 
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-## Flatted VS JSON
-
-As it is for every other specialized format capable of serializing and deserializing circular data, you should never `JSON.parse(Flatted.stringify(data))`, and you should never `Flatted.parse(JSON.stringify(data))`.
-
-The only way this could work is to `Flatted.parse(Flatted.stringify(data))`, as it is also for _CircularJSON_ or any other, otherwise there's no granted data integrity.
-
-Also please note this project serializes and deserializes only data compatible with JSON, so that sockets, or anything else with internal classes different from those allowed by JSON standard, won't be serialized and unserialized as expected.
-
-
-### New in V1: Exact same JSON API
-
-  * Added a [reviver](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#Syntax) parameter to `.parse(string, reviver)` and revive your own objects.
-  * Added a [replacer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#Syntax) and a `space` parameter to `.stringify(object, replacer, space)` for feature parity with JSON signature.
-
-
-### Compatibility
-All ECMAScript engines compatible with `Map`, `Set`, `Object.keys`, and `Array.prototype.reduce` will work, even if polyfilled.
-
-
-### How does it work ?
-While stringifying, all Objects, including Arrays, and strings, are flattened out and replaced as unique index. `*`
-
-Once parsed, all indexes will be replaced through the flattened collection.
-
-<sup><sub>`*` represented as string to avoid conflicts with numbers</sub></sup>
-
-```js
-// logic example
-var a = [{one: 1}, {two: '2'}];
-a[0].a = a;
-// a is the main object, will be at index '0'
-// {one: 1} is the second object, index '1'
-// {two: '2'} the third, in '2', and it has a string
-// which will be found at index '3'
-
-Flatted.stringify(a);
-// [["1","2"],{"one":1,"a":"0"},{"two":"3"},"2"]
-// a[one,two]    {one: 1, a}    {two: '2'}  '2'
-```
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
